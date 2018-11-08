@@ -1,0 +1,7 @@
+[package]
+name = "libnetutils"
+version = "0.1.0"
+authors = ["Manuel Landesfeind <manuel@landesfeind.de>"]
+
+[dependencies]
+pnet = { path = "../libpnet" }
