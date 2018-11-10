@@ -1,7 +1,8 @@
 [package]
-name = "libnetutils"
+name = "pnetutils"
 version = "0.1.0"
 authors = ["Manuel Landesfeind <manuel@landesfeind.de>"]
 
 [dependencies]
 pnet = { path = "../libpnet" }
+clap = "*"
