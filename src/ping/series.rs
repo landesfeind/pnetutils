@@ -8,20 +8,26 @@ use ping::icmp_transport;
 
 #[derive(Clone,Debug)]
 pub struct PingSeries {
-    ping: PingRequest,
     count: u64,
     sleep: Duration
 }
 
 fn null_callback(_:PingResponse) {}
 
-impl PingSeries {
-    pub fn new(p: PingRequest) -> Self {
+impl Default for PingSeries {
+    fn default() -> Self {
         PingSeries {
-            ping: p,
             count: 4u64,
             sleep: Duration::new(1, 0)
         }
+    }
+}
+
+impl PingSeries {
+
+    pub fn with_sleep(mut self, s: Duration) -> Self {
+        self.sleep = s;
+        self
     }
 
     pub fn with_number_of_packets(mut self, n: u64) -> Self {
@@ -33,16 +39,16 @@ impl PingSeries {
         self.count
     }
 
-    pub fn run(self) -> Result<Vec<PingResponse>> {
-        self.run_with_callback(null_callback)
+    pub fn run(self, r: PingRequest) -> Result<Vec<PingResponse>> {
+        self.run_with_callback(r, null_callback)
     }
 
-    pub fn run_with_callback(self, on_receive: fn(PingResponse)) -> Result<Vec<PingResponse>> {
+    pub fn run_with_callback(self, r: PingRequest, on_receive: fn(PingResponse)) -> Result<Vec<PingResponse>> {
         let (mut tx, mut rx) = icmp_transport();
         let mut results = Vec::new();
 
         for i in 0 .. self.count {
-            let p = self.ping.clone().with_sequence_number(i+1);
+            let p = r.clone().with_sequence_number(i+1);
             match p.ping_on_channel(&mut tx, &mut rx) {
                 Ok(r) => {
                     on_receive(r.clone());

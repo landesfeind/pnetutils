@@ -93,7 +93,7 @@ fn main() {
     };
 
     // Set up the series
-    let mut ping_series = PingSeries::new(ping);
+    let mut ping_series = PingSeries::default();
     match args.value_of("count") {
         Some(cs) => match cs.parse::<u64>() {
             Ok(c) => {
@@ -109,7 +109,7 @@ fn main() {
     println!("PING {} ({}) with {} packets", addrstring, addr, ping_series.number_of_packets());
 
     let t0 = Instant::now();
-    let results = match ping_series.run_with_callback(ping_process_callback) {
+    let results = match ping_series.run_with_callback(ping, ping_process_callback) {
         Ok(r) => r,
         Err(e) => panic!("{}", e)
     };

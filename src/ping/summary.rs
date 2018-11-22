@@ -1,3 +1,4 @@
+use std::time::Duration;
 use ping::PingResponse;
 use util::duration_to_millis;
 
@@ -31,11 +32,18 @@ impl PingSummary {
         (self.packets_lost() as f64) /
             (self.packets_sent() as f64)
     }
+    
+    pub fn successes(&self) -> Vec<Duration> {
+        self.series.iter()
+            .map(|r| r.rtt())
+            .filter(|o| o.is_some())
+            .map(|o| o.unwrap())
+            .collect()
+    }
 
     fn success_as_millis(&self) -> Vec<f64> {
-       self.series.iter()
-           .filter(|r| r.is_success())
-           .map(|r| duration_to_millis(&r.rtt().unwrap()))
+       self.successes().iter()
+           .map(|r| duration_to_millis(r))
            .collect()
     }
 

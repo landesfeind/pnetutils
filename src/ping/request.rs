@@ -124,7 +124,7 @@ impl PingRequest {
                         PingResponse::new(self, addr, Some(duration))
                     },
                     IcmpTypes::DestinationUnreachable => {
-                        let packet_unreach = DestinationUnreachablePacket::new(packet.packet().clone());
+                        let _packet_unreach = DestinationUnreachablePacket::new(packet.packet().clone());
                         PingResponse::new(self, addr, None)
                     },
                     IcmpTypes::TimeExceeded => {
